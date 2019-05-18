@@ -1,0 +1,87 @@
+        html {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+            margin: 0;
+        }
+
+
+        .mdc-top-app-bar__title {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .demo-body {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .demo-main {
+            padding-left: 16px;
+            padding-bottom: 16px;
+            overflow: auto;
+        }
+
+        .app-drawer-layout {
+            display: flex;
+            flex: 1;
+        }
+
+        .mdc-drawer {
+            max-width: calc(100vh - 64px) !important;
+            position: fixed;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            padding: 1.5rem;
+        }
+
+            .user-icon {
+            background: url("http://lorempixel.com/200/200/cats/") no-repeat center center;
+            background-size: cover;
+        }
+
+        #name-selection {
+            width: 85vw;
+            height: 50vh;
+        }
+
+        #chat {
+            width: 85vw;
+            display: none;
+        }
+
+        body {
+            background-color: #faffff;
+        }
+        #user-login {
+            background-color : white;
+            display: none;
+            opacity: 0.1;
+            z-index: 100;
+        }
+
+        #name-selection {
+            color: rgb(56, 56, 56);
+        }
+
+        .card-title {
+            margin-left: 2vw;
+        }
+
+        #name-selection-content {
+            height: 40vh;
+            display: flex;
+            align-self: center
+        }
+
+

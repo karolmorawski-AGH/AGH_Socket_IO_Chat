@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chat</title>
+
+
+    <!--JQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <!--MDC-->
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <!--Material Icons-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!--Fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <!--Stylesheet-->
+    <link rel="stylesheet" href="style.css" />
+
+
+</head>
+
+
+<body>
+    <!-- Top App Bar -->
+    <header class="mdc-top-app-bar">
+
+        <div class="mdc-top-app-bar__row">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <button class="mdc-top-app-bar__navigation-icon material-icons">menu</button>
+                <div class="mdc-top-app-bar__title" target="_blank" style="color: inherit;">Chat</div>
+            </section>
+        </div>
+    </header>
+
+    <div class="app-drawer-layout mdc-top-app-bar--fixed-adjust">
+        <!-- Drawer -->
+        <aside class="mdc-drawer mdc-drawer--dismissible demo-drawer">
+            <nav class="mdc-drawer__drawer">
+                <nav class="mdc-drawer__content">
+                    <!--Main list-->
+                    <div id="icon-with-text-demo" class="mdc-list">
+                        <a class="mdc-list-item demo-drawer-list-item" href="#">
+                            <i class="material-icons mdc-list-item__graphic" aria-hidden="true">invert_colors</i>Dark
+                            mode
+                        </a>
+                        <a class="mdc-list-item demo-drawer-list-item" href="/">
+                            <i class="material-icons mdc-list-item__graphic" aria-hidden="true">refresh</i>Refresh
+                        </a>
+                        <a class="mdc-list-item demo-drawer-list-item" href="https://www.github.com/slsnebur">
+                            <i class="fab fa-github mdc-list-item__graphic" aria-hidden="true"
+                                style="font-size: 1.3em"></i>Github
+                        </a>
+                        <a class="mdc-list-item demo-drawer-list-item" href="#">
+                            <i class="material-icons mdc-list-item__graphic" aria-hidden="true">bug_report</i>Bug Report
+                        </a>
+                    </div>
+
+                    <hr class="mdc-list-divider">
+
+                    <!--Online users-->
+                    <div class="mdc-list mdc-list--avatar-list mdc-list--non-interactive">
+                        <h3 class="mdc-list-group__subheader"
+                            style="font-size: 1em; font-family: 'Roboto', sans-serif; color: rgb(56, 56, 56);">Users
+                        </h3>
+                        <ul
+                            class="mdc-list mdc-list--two-line mdc-list--dense mdc-list--avatar-list demo-list demo-list--with-avatars demo-list--icon-placeholders mdc-list--non-interactive" id="userlist">                           
+                        </ul>
+                    </div>
+                </nav>
+            </nav>
+        </aside>
+
+        <!-- Content -->
+        <main class="mdc-drawer-app-content main-content">
+
+            <!--If user name is not selected-->
+            <div class="mdc-card" id="name-selection">
+                <div class="card-title">
+                    <h2 class="demo-card__title mdc-typography mdc-typography--headline5">Select username</h2>
+                </div>
+
+                <div id="name-selection-content" style="display: block;">
+
+                    <form id="userForm">
+                        <div class="jbutton" style="margin-top: 2vh">
+                            <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                                <input type="text" class="mdc-text-field__input" id="name-input">
+                                <label for="name-input" class="mdc-floating-label" id="nameLabel">Username</label>
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex;">
+                            <button class="mdc-button mdc-button--unelevated"
+                                style="margin-top: 3vh; left:25%">Confirm</button>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+
+            <!--If user name is selected-->
+            <div id="chat">
+                <div class="mdc-card">
+                    <div class="" tabindex="0">
+                        <div class="mdc-list" style="height: 500px; overflow:hidden; overflow-y:scroll;">
+                            <h3 class="mdc-list-group__subheader"
+                                style="font-size: 1em; font-family: 'Roboto', sans-serif; color: rgb(56, 56, 56);">Chat
+                            </h3>
+                            <div id="chatbox">
+                                <ul
+                                    class="mdc-list  mdc-list--dense mdc-list--avatar-list demo-list demo-list--with-avatars demo-list--icon-placeholders mdc-list--non-interactive">
+                                    <hr class="mdc-list-divider">
+
+                            </div>
+                            </ul>
+
+                        </div>
+                        <div style="height: 2em;"></div>
+                        <hr class="mdc-list-divider">
+                        <div class="demo-card__secondary mdc-typography mdc-typography--body2"></div>
+                    </div>
+                    <div class="mdc-card__actions " style="margin-top: 0.4em;">
+                        <div class="mdc-card__action-buttons" style="width: 100%">
+                            <!--Textbox-->
+                            <section style="width:100%">
+                                <form id="msgForm">
+                                    <div class="mdc-text-field text-field demo-text-field-outlined-shaped mdc-text-field--outlined"
+                                        data-mdc-auto-init="MDCTextField" style="width:100%">
+                                        <input type="text" class="mdc-text-field__input"
+                                            aria-controls="my-text-field-helper-text" id="msg">
+                                        <label for="full-func-text-field" class="mdc-floating-label"
+                                            id="msgLabel">Message</label>
+                                        <div class="mdc-line-ripple"></div>
+                                    </div>
+
+                            </section>
+                        </div>
+                        <div class="mdc-card__action-icons">
+                            <button
+                                class="mdc-icon-button material-icons mdc-card__action mdc-card__action--icon--unbounded"
+                                title="Send" type="submit" data-mdc-ripple-is-unbounded="true"
+                                style="color: #6200EE">send</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+</body>
+
+<!--Scripts-->
+<script src="/socket.io/socket.io.js"></script>
+<!--MDC-->
+<script>
+    //Textfield
+    mdc.autoInit();
+
+    // Instantiate MDC Drawer
+    const drawerEl = document.querySelector('.mdc-drawer');
+    const drawer = new mdc.drawer.MDCDrawer.attachTo(drawerEl);
+
+    // Instantiate MDC Top App Bar (required)
+    const topAppBarEl = document.querySelector('.mdc-top-app-bar');
+    const topAppBar = new mdc.topAppBar.MDCTopAppBar.attachTo(topAppBarEl);
+
+    topAppBar.setScrollTarget(document.querySelector('.main-content'));
+    topAppBar.listen('MDCTopAppBar:nav', () => {
+        drawer.open = !drawer.open;
+    });
+</script>
+<!--chat and users-->
+<script>
+    $(function () {
+        var socket = io.connect();
+        var $msgForm = $('#msgForm');
+        var $msg = $('#msg');
+        var $chat = $('#chat');
+        var $nameSelection = $('#name-selection');
+        var $userform = $('#userForm');
+        var $nameinput = $('#name-input');
+        var $userlist = $('#userlist');
+
+        //If message form is send creates event
+        $msgForm.submit(function (e) {
+            e.preventDefault();
+
+            if($msg.val() == '') {
+                return;
+            }
+
+            socket.emit('send message', $msg.val());
+
+            //Sets
+            console.log($msg.val());
+            $msg.val('');
+        });
+
+        //If user form is send creates event
+        $userform.submit(function (e) {
+            e.preventDefault();
+            socket.emit('new user', $nameinput.val(), function(data){
+                if(data) {
+                    $nameSelection.hide();
+                    $chat.show();
+                }
+                else {
+                    return;
+                }
+            });
+            $nameinput.val('');
+        });
+
+        socket.on('get users', function(data) {
+            var html = '';
+            for(i=0; i<data.length; i++) {
+                html +=     '<li class="mdc-list-item" tabindex="0"><span class="mdc-list-item__graphic material-icons user-icon"></span><span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">' + data[i] + '</span><span class="mdc-list-item__secondary-text">192.168.0.100</span></span></li>';
+            }
+            
+            $userlist.html(html);
+        });
+
+        socket.on('new message', function (data) {
+            //Parsing hell
+            var beggining = '<hr class="mdc-list-divider"><li class="mdc-list-item" tabindex="0">'
+            var icon =
+                '<span class="mdc-list-item__graphic material-icons user-icon"></span><span class="mdc-list-item__text">';
+            var user_name = '<span class="mdc-list-item__primary-text">' + data.user +'</span>'
+            var user_timestamp = '<span class="mdc-list-item__secondary-text">' + data.ts +'</span></span>'
+            var user_message =
+                '<div class="mdc-list-item__meta"> <div class="chat-msg" style="font-family: Roboto; color: rgb(56, 56, 56); font-size: 1.2em;">';
+            var rest = '</div></div></li>';
+
+            $('#chatbox ul').append(beggining + icon + user_name + user_timestamp + user_message + data
+                .msg + rest);
+        });
+
+    })
+</script>
+
+</html>
