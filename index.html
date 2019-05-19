@@ -68,8 +68,8 @@
                         <h3 class="mdc-list-group__subheader"
                             style="font-size: 1em; font-family: 'Roboto', sans-serif; color: rgb(56, 56, 56);">Users
                         </h3>
-                        <ul
-                            class="mdc-list mdc-list--two-line mdc-list--dense mdc-list--avatar-list demo-list demo-list--with-avatars demo-list--icon-placeholders mdc-list--non-interactive" id="userlist">                           
+                        <ul class="mdc-list mdc-list--two-line mdc-list--dense mdc-list--avatar-list demo-list demo-list--with-avatars demo-list--icon-placeholders mdc-list--non-interactive"
+                            id="userlist">
                         </ul>
                     </div>
                 </nav>
@@ -80,7 +80,7 @@
         <main class="mdc-drawer-app-content main-content">
 
             <!--If user name is not selected-->
-            <div class="mdc-card" id="name-selection">
+            <div class="mdc-card" id="name-selection" class="main-area-alt">
                 <div class="card-title">
                     <h2 class="demo-card__title mdc-typography mdc-typography--headline5">Select username</h2>
                 </div>
@@ -110,7 +110,7 @@
             <div id="chat">
                 <div class="mdc-card">
                     <div class="" tabindex="0">
-                        <div class="mdc-list" style="height: 500px; overflow:hidden; overflow-y:scroll;">
+                        <div id="scrollbox" class="mdc-list" style="height: 500px; overflow:hidden; overflow-y:scroll;">
                             <h3 class="mdc-list-group__subheader"
                                 style="font-size: 1em; font-family: 'Roboto', sans-serif; color: rgb(56, 56, 56);">Chat
                             </h3>
@@ -195,7 +195,7 @@
         $msgForm.submit(function (e) {
             e.preventDefault();
 
-            if($msg.val() == '') {
+            if ($msg.val() == '') {
                 return;
             }
 
@@ -209,34 +209,45 @@
         //If user form is send creates event
         $userform.submit(function (e) {
             e.preventDefault();
-            socket.emit('new user', $nameinput.val(), function(data){
-                if(data) {
+            socket.emit('new user', $nameinput.val(), function (data) {
+                if (data) {
                     $nameSelection.hide();
                     $chat.show();
-                }
-                else {
+                } else {
                     return;
                 }
             });
             $nameinput.val('');
         });
 
-        socket.on('get users', function(data) {
+        socket.on('get users', function (data, ip, avatar, id) {
+
+
+
             var html = '';
-            for(i=0; i<data.length; i++) {
-                html +=     '<li class="mdc-list-item" tabindex="0"><span class="mdc-list-item__graphic material-icons user-icon"></span><span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">' + data[i] + '</span><span class="mdc-list-item__secondary-text">192.168.0.100</span></span></li>';
+            for (i = 0; i < data.length; i++) {
+                html +=
+                    '<li class="mdc-list-item" tabindex="0"><span class="mdc-list-item__graphic material-icons user-icon" id="' +
+                    id[i] +
+                    '")></span><span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">' +
+                    data[i] + '</span><span class="mdc-list-item__secondary-text">' + ip[i] +
+                    '</span></span></li>';
+                //var cssa = $("#name-selection").css('background-image', 'url("' + avatar[i] + '")');
+                //console.log(cssa.html());
             }
-            
+
             $userlist.html(html);
         });
 
         socket.on('new message', function (data) {
+            scrollToBottom();
             //Parsing hell
             var beggining = '<hr class="mdc-list-divider"><li class="mdc-list-item" tabindex="0">'
             var icon =
                 '<span class="mdc-list-item__graphic material-icons user-icon"></span><span class="mdc-list-item__text">';
-            var user_name = '<span class="mdc-list-item__primary-text">' + data.user +'</span>'
-            var user_timestamp = '<span class="mdc-list-item__secondary-text">' + data.ts +'</span></span>'
+            var user_name = '<span class="mdc-list-item__primary-text">' + data.user + '</span>'
+            var user_timestamp = '<span class="mdc-list-item__secondary-text">' + data.ts +
+                '</span></span>'
             var user_message =
                 '<div class="mdc-list-item__meta"> <div class="chat-msg" style="font-family: Roboto; color: rgb(56, 56, 56); font-size: 1.2em;">';
             var rest = '</div></div></li>';
@@ -246,6 +257,13 @@
         });
 
     })
+
+    const scrollbox = document.getElementById('scrollbox');
+
+    function scrollToBottom() {
+        scrollbox.scrollTop = scrollbox.scrollHeight;
+    }
+
 </script>
 
 </html>

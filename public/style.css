@@ -46,11 +46,16 @@
         }
 
             .user-icon {
-            background: url("http://lorempixel.com/200/200/cats/") no-repeat center center;
+            background: url("https://identicon.rmhdev.net/a.png") no-repeat center center;
             background-size: cover;
         }
 
         #name-selection {
+            width: 85vw;
+            height: 50vh;
+        }
+
+        #password-selection {
             width: 85vw;
             height: 50vh;
         }

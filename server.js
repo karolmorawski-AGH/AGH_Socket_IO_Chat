@@ -4,12 +4,11 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 
-var identicon = require('identicon');
-var fs = require('fs');
-
 //Arrays of usernames, user avatars
 users = [];
-users
+userIp = [];
+avatars = [];
+ids = [];
 connections = [];
 
 //Starting server on default port
@@ -21,6 +20,11 @@ console.log('Server running on port ' + port);
 //Index page
 app.get('/', function(request, response){
     response.sendFile(__dirname + '/index.html');
+});
+
+//Password page
+app.get('/password', function(request, response){
+    response.sendFile(__dirname + '/password.html');
 });
 
 //Serving static files
@@ -44,6 +48,9 @@ io.sockets.on('connection', function(socket){
     //On disconnect
     socket.on('disconnect', function(data){
         users.splice(users.indexOf(socket.username), 1);
+        users.splice(userIp.indexOf(socket.userIp), 1);
+        users.splice(avatars.indexOf(socket.avatar), 1);
+        users.splice(ids.indexOf(socket.id), 1);
         updateUsernames();
 
         //timestamp date
@@ -72,18 +79,29 @@ io.sockets.on('connection', function(socket){
     //Add user
     socket.on('new user', function(data, callback){
         callback(true);
+
+        //Username
         socket.username = data;
-        //var socket.buffer = identicon.generateSync({ id: 'ajido', size: 40 });
+        //User IP
+        socket.userIp = socket.request.connection.remoteAddress;
+        //Avatar'
+        socket.avatar = 'https://identicon.rmhdev.net/' + data + users.length + '.png';
+        //ID
+        socket.id = users.length;
+
         users.push(socket.username);
+        userIp.push(socket.userIp);
+        avatars.push(socket.avatar);
+        ids.push(socket.id);
+
         updateUsernames();
     });
 
     function updateUsernames() {
-        io.sockets.emit('get users', users);
+        io.sockets.emit('get users', users, userIp, avatars, ids);
     }
 
 });
-
 
 //Get UTC Time
 Date.prototype.getUnixTime = function() { 
