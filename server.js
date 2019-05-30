@@ -1,8 +1,17 @@
 var express = require('express');
-
+const session = require('express-session');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
+
+app.use(session({secret: '$1$fsaf251$lcvxhxPhHFT9u1Tooytgd.'}));
+
+
+//Load password
+const fs = require('fs');
+var rawdata = fs.readFileSync('./data/password.json');  
+var pwd = JSON.parse(rawdata);  
+
 
 //Arrays of usernames, user avatars
 users = [];
@@ -16,15 +25,28 @@ var port = 3000;
 server.listen(process.env.PORT || port);
 console.log('Server running on port ' + port);
 
+//global session
+var sess;
+
 //Routing
 //Index page
 app.get('/', function(request, response){
-    response.sendFile(__dirname + '/index.html');
+    sess=request.session;
+    if(sess.pass =="jezus") {
+        response.sendFile(__dirname + '/index.html');
+    }
+    else {
+    response.sendFile(__dirname + '/password.html');
+    }
 });
 
 //Password page
-app.get('/password', function(request, response){
-    response.sendFile(__dirname + '/password.html');
+app.post('/password', function(request, response){
+    sess=request.session;
+    sess.pass=request.body.password;
+    request.end("done");
+    console.log(sess.pass);
+    //response.sendFile(__dirname + '/password.html');
 });
 
 //Serving static files
