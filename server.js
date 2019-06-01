@@ -1,17 +1,31 @@
-var express = require('express');
+const express = require('express');
 const session = require('express-session');
+const bodyParser = require('body-parser');
+const crypto = require('crypto');
+
+
+//Configuration
 var app = express();
 var server = require('http').createServer(app);
+
+//sockets
 var io = require('socket.io').listen(server);
 
-app.use(session({secret: '$1$fsaf251$lcvxhxPhHFT9u1Tooytgd.'}));
+//body parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
+//session
+app.use(session({
+    secret: '$1$fsaf251$lcvxhxPhHFT9u1Tooytgd.',
+    resave: false,
+    saveUninitialized: false
+}));
 
 //Load password
 const fs = require('fs');
 var rawdata = fs.readFileSync('./data/password.json');  
 var pwd = JSON.parse(rawdata);  
-
 
 //Arrays of usernames, user avatars
 users = [];
@@ -25,28 +39,41 @@ var port = 3000;
 server.listen(process.env.PORT || port);
 console.log('Server running on port ' + port);
 
-//global session
-var sess;
+
+var auth = function(request, response, next) {
+    if (request.session && request.session.isValid === true)
+      return next();
+    else
+      return response.sendFile(__dirname + '/login.html');
+  };
 
 //Routing
 //Index page
-app.get('/', function(request, response){
-    sess=request.session;
-    if(sess.pass =="jezus") {
-        response.sendFile(__dirname + '/index.html');
-    }
-    else {
-    response.sendFile(__dirname + '/password.html');
-    }
+app.get('/', auth, function(request, response){
+    response.sendFile(__dirname + '/index.html');
 });
 
 //Password page
-app.post('/password', function(request, response){
-    sess=request.session;
-    sess.pass=request.body.password;
-    request.end("done");
-    console.log(sess.pass);
-    //response.sendFile(__dirname + '/password.html');
+app.get('/login', function(request, response, next){
+    response.sendFile(__dirname + '/login.html');
+});
+
+//Password page
+app.post('/submit', function(request, response){
+
+    if (!request.body.password) {
+        response.sendFile(__dirname + '/login.html');   
+      } 
+
+      var hashedPassword = crypto.createHash('sha256').update(request.body.password).digest('base64');
+      
+      if(hashedPassword === pwd.password) {
+        request.session.isValid = true;
+        response.sendFile(__dirname + '/index.html');
+      }
+      else {
+        response.sendFile(__dirname + '/login.html');   
+      }
 });
 
 //Serving static files
@@ -142,4 +169,3 @@ Date.time = function() {
 app.use(function (req, res, next) {
     res.status(404).send("404 Not found")
   })
-

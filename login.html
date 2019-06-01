@@ -36,10 +36,10 @@
 
             <div id="name-selection-content" style="display: block;">
 
-                <form id="pswdForm">
+                <form id="pswdForm" action="submit" method="POST">
                     <div class="jbutton" style="margin-top: 2vh">
                         <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
-                            <input type="password" class="mdc-text-field__input" id="password-input">
+                            <input type="password" class="mdc-text-field__input" name="password" id="password-input">
                             <label for="password-input" class="mdc-floating-label" id="passwordLabel">Password</label>
                             <div class="mdc-line-ripple"></div>
                         </div>
@@ -57,33 +57,18 @@
     </main>
 
     <!--Scripts-->
-    <script src="/socket.io/socket.io.js"></script>
     <script>
         //Textfield
         mdc.autoInit();
 
         // Instantiate MDC Drawer
         const drawerEl = document.querySelector('.mdc-drawer');
-        const drawer = new mdc.drawer.MDCDrawer.attachTo(drawerEl);
+        //const drawer = new mdc.drawer.MDCDrawer.attachTo(drawerEl);
 
         // Instantiate MDC Top App Bar (required)
         const topAppBarEl = document.querySelector('.mdc-top-app-bar');
-        const topAppBar = new mdc.topAppBar.MDCTopAppBar.attachTo(topAppBarEl);
-
-        topAppBar.setScrollTarget(document.querySelector('.main-content'));
-        topAppBar.listen('MDCTopAppBar:nav', () => {
-            drawer.open = !drawer.open;
-        });
+        //const topAppBar = new mdc.topAppBar.MDCTopAppBar.attachTo(topAppBarEl);
     </script>
 
-    <!--Sockets-->
-    <script>
-        $(function () {
-            var socket = io.connect();
-
-
-
-        })
-    </script>
 
 </body>
