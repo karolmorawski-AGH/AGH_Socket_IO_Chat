@@ -161,6 +161,8 @@
 
 <!--Scripts-->
 <script src="/socket.io/socket.io.js"></script>
+<!--chat and users-->
+<script src="/public/connection.js"></script>
 <!--MDC-->
 <script>
     //Textfield
@@ -181,7 +183,7 @@
 </script>
 <!--chat and users-->
 <script>
-    $(function () {
+  $(function () {
         var socket = io.connect();
         var $msgForm = $('#msgForm');
         var $msg = $('#msg');
@@ -221,7 +223,6 @@
         });
 
         socket.on('get users', function (data, ip, avatar, id) {
-
             var html = '';
             for (i = 0; i < data.length; i++) {
                 html +=
@@ -230,8 +231,6 @@
                     '")></span><span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">' +
                     data[i] + '</span><span class="mdc-list-item__secondary-text">' + ip[i] +
                     '</span></span></li>';
-                //var cssa = $("#name-selection").css('background-image', 'url("' + avatar[i] + '")');
-                //console.log(cssa.html());
             }
 
             $userlist.html(html);
@@ -259,9 +258,8 @@
     const scrollbox = document.getElementById('scrollbox');
 
     function scrollToBottom() {
-        scrollbox.scrollTop = scrollbox.scrollHeight;
+        scrollbox.scrollTop = scrollbox.scrollHeight+2000;
     }
-
 </script>
 
 </html>

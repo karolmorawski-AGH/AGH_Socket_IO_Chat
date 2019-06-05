@@ -3,7 +3,6 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
 
-
 //Configuration
 var app = express();
 var server = require('http').createServer(app);
@@ -27,18 +26,27 @@ const fs = require('fs');
 var rawdata = fs.readFileSync('./data/password.json');  
 var pwd = JSON.parse(rawdata);  
 
+//TODO -> class
 //Arrays of usernames, user avatars
-users = [];
+class User {
+    constructor(uname, uip) {
+        this.uname = uname;
+        this.uip = uip;
+    }
+}
+let users = [];
+let connections = [];
+
+//TODO dont use it
 userIp = [];
 avatars = [];
 ids = [];
-connections = [];
+
 
 //Starting server on default port
 var port = 3000;
 server.listen(process.env.PORT || port);
 console.log('Server running on port ' + port);
-
 
 var auth = function(request, response, next) {
     if (request.session && request.session.isValid === true)
@@ -58,14 +66,14 @@ app.get('/login', function(request, response, next){
     response.sendFile(__dirname + '/login.html');
 });
 
-//Password page
+//Authorization
 app.post('/submit', function(request, response){
 
     if (!request.body.password) {
         response.sendFile(__dirname + '/login.html');   
       } 
 
-      var hashedPassword = crypto.createHash('sha256').update(request.body.password).digest('base64');
+      var hashedPassword = crypto.createHash(pwd.type).update(request.body.password).digest(pwd.encoding);
       
       if(hashedPassword === pwd.password) {
         request.session.isValid = true;
@@ -83,10 +91,8 @@ app.use(express.static('public'))
 //On connection
 io.sockets.on('connection', function(socket){
 
-    //Actual timestamp
+    //Timestamp
     var timestamp = new Date();
-    //timestamp date
-    var tstamp = timestamp.toISOString();
 
     connections.push(socket);
     var socketId = socket.id;
@@ -102,10 +108,10 @@ io.sockets.on('connection', function(socket){
         users.splice(ids.indexOf(socket.id), 1);
         updateUsernames();
 
-        //timestamp date
-        var tstamp = new Date().toISOString();
-
         connections.splice(connections.indexOf(socket),1);
+        //timestamp date
+        var tstamp = new Date();
+
         console.log(clientIp + '\tdisconnected' + '\t[' + connections.length + ']' + '\t' + tstamp);
     });
 
@@ -121,7 +127,7 @@ io.sockets.on('connection', function(socket){
         minutes = minutes > 9 ? minutes : '0' + minutes;    
         var hm = timestamp.getHours() + ':' + minutes;
 
-        console.log('USER\t\t' + tstamp +'\t\t' +data);
+        console.log('MESSAGE\t\t\t\t' + timestamp +'\t\t' +data);
         io.sockets.emit('new message', {msg: data, user: socket.username, ts: hm});
     });
 
@@ -133,7 +139,7 @@ io.sockets.on('connection', function(socket){
         socket.username = data;
         //User IP
         socket.userIp = socket.request.connection.remoteAddress;
-        //Avatar'
+        //Avatar
         socket.avatar = 'https://identicon.rmhdev.net/' + data + users.length + '.png';
         //ID
         socket.id = users.length;
@@ -149,7 +155,7 @@ io.sockets.on('connection', function(socket){
     function updateUsernames() {
         io.sockets.emit('get users', users, userIp, avatars, ids);
     }
-
+    
 });
 
 //Get UTC Time
@@ -167,5 +173,5 @@ Date.time = function() {
 
 //Handle 404
 app.use(function (req, res, next) {
-    res.status(404).send("404 Not found")
+    res.status(404).send("Not found")
   })
