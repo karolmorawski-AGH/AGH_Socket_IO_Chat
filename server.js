@@ -138,7 +138,7 @@ io.sockets.on('connection', function(socket){
         //Username
         socket.username = data;
         //User IP
-        socket.userIp = socket.handshake.address;
+        socket.userIp = socket.request.connection.remoteAddress;
         //Avatar
         socket.avatar = 'https://identicon.rmhdev.net/' + data + users.length + '.png';
         //ID
