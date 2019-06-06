@@ -106,9 +106,9 @@ io.sockets.on('connection', function(socket){
         users.splice(userIp.indexOf(socket.userIp), 1);
         users.splice(avatars.indexOf(socket.avatar), 1);
         users.splice(ids.indexOf(socket.id), 1);
+        connections.splice(connections.indexOf(socket),1);
         updateUsernames();
 
-        connections.splice(connections.indexOf(socket),1);
         //timestamp date
         var tstamp = new Date();
 
@@ -134,7 +134,10 @@ io.sockets.on('connection', function(socket){
     //Add user
     socket.on('new user', function(data, callback){
         callback(true);
-
+        console.log(data);
+        if(users.includes(data) == true) {
+            socket.username = data + users.length + 2;
+        }
         //Username
         socket.username = data;
         //User IP
